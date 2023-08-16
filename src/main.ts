@@ -3,11 +3,20 @@ import fs from 'fs'
 import glob from 'glob'
 import chromeWebstoreUpload from 'chrome-webstore-upload'
 
+function failSilently(silentFail: string, type: 'upload' | 'publish') {
+  if (silentFail == 'true') return
+  
+  core.setFailed(
+    `${type} error - You will need to go to the Chrome Web Store Developer Dashboard and upload it manually.`
+  )
+}
+
 function uploadFile(
   webStore: any,
   filePath: string,
   publishFlg: string,
-  publishTarget: string
+  publishTarget: string,
+  silentFail: string
 ): void {
   const myZipFile = fs.createReadStream(filePath)
   webStore
@@ -26,9 +35,9 @@ function uploadFile(
             Error(`${itemError.error_detail} (${itemError.error_code})`)
           )
         })
-        core.setFailed(
-          'upload error - You will need to go to the Chrome Web Store Developer Dashboard and upload it manually.'
-        )
+
+        failSilently(silentFail)
+        
         return
       }
 
@@ -40,18 +49,16 @@ function uploadFile(
           })
           .catch((e: any) => {
             core.error(e)
-            core.setFailed(
-              'publish error - You will need to access the Chrome Web Store Developer Dashboard and publish manually.'
-            )
+            
+            failSilently(silentFail, 'publish)
           })
       }
     })
     .catch((e: any) => {
       console.log(e)
       core.error(e)
-      core.setFailed(
-        'upload error - You will need to go to the Chrome Web Store Developer Dashboard and upload it manually.'
-      )
+
+      failSilently(silentFail, 'upload')
     })
 }
 
@@ -65,6 +72,7 @@ async function run(): Promise<void> {
     const globFlg = core.getInput('glob') as 'true' | 'false'
     const publishFlg = core.getInput('publish') as 'true' | 'false'
     const publishTarget = core.getInput('publish-target')
+    const silentFail = core.getInput('silent-fail') as 'true' | 'false'
 
     const webStore = chromeWebstoreUpload({
       extensionId,
@@ -76,12 +84,12 @@ async function run(): Promise<void> {
     if (globFlg === 'true') {
       const files = glob.sync(filePath)
       if (files.length > 0) {
-        uploadFile(webStore, files[0], publishFlg, publishTarget)
+        uploadFile(webStore, files[0], publishFlg, publishTarget, silentFail)
       } else {
         core.setFailed('No files to match.')
       }
     } else {
-      uploadFile(webStore, filePath, publishFlg, publishTarget)
+      uploadFile(webStore, filePath, publishFlg, publishTarget, silentFail)
     }
   } catch (error) {
     core.setFailed((error as Error).message)
