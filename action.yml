@@ -29,9 +29,9 @@ inputs:
     required: false
     default: "true"
   silent-update:
-    description: 'if true, ITEM_NOT_UPDATABLE will exit silently'
+    description: 'if true, ITEM_NOT_UPDATABLE errors will exit silently'
     required: false
-    default: "false
+    default: "false"
   publish-target:
     required: false
     description: 'target of publish (`default` or `trustedTesters`)'
