@@ -28,8 +28,8 @@ inputs:
     description: 'if true package will be automatically published'
     required: false
     default: "true"
-  silent-update:
-    description: 'if true, ITEM_NOT_UPDATABLE errors will exit silently'
+  silent-fail:
+    description: 'if true, upload and publish errors will exit silently'
     required: false
     default: "false"
   publish-target:
