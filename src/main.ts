@@ -4,7 +4,7 @@ import glob from 'glob'
 import chromeWebstoreUpload from 'chrome-webstore-upload'
 
 function failSilently(silentFail: string, type: 'upload' | 'publish') {
-  if (silentFail == 'true') return
+  if (silentFail == 'false') return
   
   core.setFailed(
     `${type} error - You will need to go to the Chrome Web Store Developer Dashboard and upload it manually.`
