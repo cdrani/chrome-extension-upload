@@ -36,7 +36,7 @@ function uploadFile(
           )
         })
 
-        failSilently(silentFail)
+        failSilently(silentFail, 'upload')
         
         return
       }
@@ -50,7 +50,7 @@ function uploadFile(
           .catch((e: any) => {
             core.error(e)
             
-            failSilently(silentFail, 'publish)
+            failSilently(silentFail, 'publish')
           })
       }
     })
