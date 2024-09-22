@@ -37,5 +37,5 @@ inputs:
     description: 'target of publish (`default` or `trustedTesters`)'
     default: "default"
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
